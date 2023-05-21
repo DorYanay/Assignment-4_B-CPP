@@ -12,4 +12,6 @@ public:
     void shoot(Character *);
     bool hasboolets();
     void reload();
+    string print() override;
+    void attack(Character *enemy) override { shoot(enemy); }
 };

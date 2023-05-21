@@ -6,20 +6,13 @@
 #include "Cowboy.hpp"
 #include "Team.hpp"
 #include "Team2.hpp"
-class SmartTeam
+class SmartTeam : public Team
 {
-    Character *leader;
-    vector<Character *> team;
 
 public:
     SmartTeam(Character *leader);
     SmartTeam(const SmartTeam &);
-    SmartTeam &operator=(const SmartTeam &);
-    SmartTeam(SmartTeam &&) noexcept;
-    SmartTeam &operator=(SmartTeam &&) noexcept;
-    void add(Character *);
-    void attack(SmartTeam *);
-    int stillAlive();
+    void attack(Team *);
     void print();
-    ~SmartTeam();
+    Character *getFarthestMember(Character *member);
 };

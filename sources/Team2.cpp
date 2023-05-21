@@ -1,30 +1,43 @@
 #include "Character.hpp"
 #include "Team2.hpp"
-#include <vector>
 
-Team2::Team2(Character *leader) : leader(leader) {}
-Team2::Team2(const Team2 &other) : leader(other.leader) {}
-Team2::Team2(Team2 &&other) noexcept
+Team2::Team2(Character *leader) : Team(leader) {}
+Team2::Team2(const Team2 &other) : Team(other) {}
+void Team2::attack(Team *enemyTeam)
 {
-    leader = other.leader;
-    team = other.team;
+    if (!enemyTeam)
+    {
+        throw runtime_error("WHERE IS THE ENEMY TEAM?!\n");
+    }
+    if (!enemyTeam->stillAlive())
+    {
+        return;
+    }
+    Character *leader = this->getLeader();
+    if (!leader->isAlive())
+    {
+        leader = getClosestMember(leader);
+    }
+    while (this->stillAlive() && enemyTeam->stillAlive())
+    {
+        Character *victim = enemyTeam->getClosestMember(leader);
+        for (Character *member : *this->getTeam())
+        {
+            if (member->isAlive())
+            {
+                member->attack(enemyTeam->getClosestMember(leader));
+            }
+            if (!victim->isAlive())
+            {
+                victim = enemyTeam->getClosestMember(leader);
+            }
+        }
+    }
 }
-
-Team2 &Team2::operator=(const Team2 &other)
+void Team2::print()
 {
-    leader = other.leader;
-    team = other.team;
-    return *this;
+    for (Character *member : *this->getTeam())
+    {
+        cout << member->print() << endl;
+    }
 }
-
-Team2 &Team2::operator=(Team2 &&other) noexcept
-{
-    leader = other.leader;
-    team = other.team;
-    return *this;
-}
-void Team2::add(Character *member) {}
-void Team2::attack(Team2 *other) {}
-int Team2::stillAlive() { return 0; }
-void Team2::print() {}
-Team2::~Team2() {}

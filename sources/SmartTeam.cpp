@@ -2,29 +2,57 @@
 #include "SmartTeam.hpp"
 #include <vector>
 
-SmartTeam::SmartTeam(Character *leader) : leader(leader) {}
-SmartTeam::SmartTeam(const SmartTeam &other) : leader(other.leader) {}
-SmartTeam::SmartTeam(SmartTeam &&other) noexcept
+SmartTeam::SmartTeam(Character *leader) : Team(leader) {}
+SmartTeam::SmartTeam(const SmartTeam &other) : Team(other) {}
+void SmartTeam::attack(Team *enemyTeam)
 {
-    leader = other.leader;
-    team = other.team;
+    if (!enemyTeam)
+    {
+        throw runtime_error("WHERE IS THE ENEMY TEAM?!\n");
+    }
+    if (!enemyTeam->stillAlive())
+    {
+        return;
+    }
+    Character *leader = this->getLeader();
+    if (!leader->isAlive())
+    {
+        leader = this->getClosestMember(leader);
+    }
+    while (this->stillAlive() && enemyTeam->stillAlive())
+    {
+        Character *victim = enemyTeam->getClosestMember(leader);
+        for (Character *member : *this->getTeam())
+        {
+            if (member->getRole())
+            {
+                if (member->isAlive())
+                {
+                    member->attack(enemyTeam->getFarthestMember(member));
+                }
+                if (!victim->isAlive())
+                {
+                    victim = enemyTeam->getClosestMember(leader);
+                }
+            }
+            if (!member->getRole())
+            {
+                if (member->isAlive())
+                {
+                    member->attack(enemyTeam->getClosestMember(member));
+                }
+                if (!victim->isAlive())
+                {
+                    victim = enemyTeam->getClosestMember(leader);
+                }
+            }
+        }
+    }
 }
-
-SmartTeam &SmartTeam::operator=(const SmartTeam &other)
+void SmartTeam::print()
 {
-    leader = other.leader;
-    team = other.team;
-    return *this;
+    for (Character *member : *this->getTeam())
+    {
+        cout << member->print() << endl;
+    }
 }
-
-SmartTeam &SmartTeam::operator=(SmartTeam &&other) noexcept
-{
-    leader = other.leader;
-    team = other.team;
-    return *this;
-}
-void SmartTeam::add(Character *member) {}
-void SmartTeam::attack(SmartTeam *other) {}
-int SmartTeam::stillAlive() { return 0; }
-void SmartTeam::print() {}
-SmartTeam::~SmartTeam() {}

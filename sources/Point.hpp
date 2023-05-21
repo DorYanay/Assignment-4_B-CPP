@@ -1,7 +1,8 @@
 #pragma once
 #include <iostream>
 #include <string>
-
+#include <cmath>
+using namespace std;
 class Point
 {
 
@@ -11,6 +12,6 @@ class Point
 public:
     Point(double AxisX, double AxisY);
     double distance(const Point &);
-    void print();
+    string print();
     static Point moveTowards(Point, Point, double);
 };
