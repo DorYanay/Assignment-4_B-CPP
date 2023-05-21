@@ -70,6 +70,25 @@ Character *Team::getClosestMember(Team *other)
 
     return closestCharacter;
 }
+Character *Team::getClosestMemberSmart(Character *teammate, Team *other)
+{
+    Character *closestCharacter = nullptr;
+    double minDistance = __DBL_MAX__;
+
+    for (Character *member : other->team)
+    {
+        if (member->isAlive())
+        {
+            if (member->distance(teammate) < minDistance)
+            {
+                minDistance = member->distance(teammate);
+                closestCharacter = member;
+            }
+        }
+    }
+
+    return closestCharacter;
+}
 Character *Team::getFarthestMember(Character *teammate, Team *other)
 {
     Character *farthestCharacter = nullptr;
@@ -95,44 +114,59 @@ void Team::attack(Team *enemyTeam)
     {
         throw invalid_argument("WHERE IS THE ENEMY TEAM?!\n");
     }
-    if (enemyTeam->stillAlive() == 0)
+    if (!enemyTeam->stillAlive())
     {
-        return;
+        throw runtime_error("You are defiling corpses\n");
     }
     if (!this->leader->isAlive())
     {
         this->leader = this->getClosestMember(this);
     }
-    while (this->stillAlive() && enemyTeam->stillAlive())
+
+    Character *victim = this->getClosestMember(enemyTeam);
+    for (Character *member : team)
     {
-        Character *victim = this->getClosestMember(enemyTeam);
-        for (Character *member : team)
+        if (member->getRole())
         {
-            if (member->getRole())
+            if (!victim->isAlive())
             {
-                if (member->isAlive())
+                victim = this->getClosestMember(enemyTeam);
+                if (!victim)
                 {
-                    member->attack(this->getClosestMember(enemyTeam));
+                    return;
                 }
-                if (!victim->isAlive())
-                {
-                    victim = this->getClosestMember(enemyTeam);
-                }
+            }
+            if (member->isAlive())
+            {
+                member->attack(victim);
             }
         }
-        for (Character *member : team)
+        else
         {
-            if (!member->getRole())
+            continue;
+        }
+    }
+    for (Character *member : team)
+    {
+        if (!member->getRole())
+        {
+            if (!victim->isAlive())
             {
-                if (member->isAlive())
+                victim = this->getClosestMember(enemyTeam);
+                if (!victim)
                 {
-                    member->attack(this->getClosestMember(enemyTeam));
-                }
-                if (!victim->isAlive())
-                {
-                    victim = this->getClosestMember(enemyTeam);
+                    return;
                 }
             }
+
+            if (member->isAlive())
+            {
+                member->attack(victim);
+            }
+        }
+        else
+        {
+            continue;
         }
     }
 }

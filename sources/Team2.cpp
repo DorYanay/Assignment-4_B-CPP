@@ -11,26 +11,28 @@ void Team2::attack(Team *enemyTeam)
     }
     if (!enemyTeam->stillAlive())
     {
-        return;
+        throw runtime_error("You are defiling corpses\n");
     }
     Character *leader = this->getLeader();
     if (!leader->isAlive())
     {
         leader = this->getClosestMember(this);
     }
-    while (this->stillAlive() != 0 && enemyTeam->stillAlive() != 0)
+
+    Character *victim = this->getClosestMember(enemyTeam);
+    for (Character *member : *this->getTeam())
     {
-        Character *victim = this->getClosestMember(enemyTeam);
-        for (Character *member : *this->getTeam())
+        if (!victim->isAlive())
         {
-            if (member->isAlive())
+            victim = this->getClosestMember(enemyTeam);
+            if (!victim)
             {
-                member->attack(this->getClosestMember(enemyTeam));
+                return;
             }
-            if (!victim->isAlive())
-            {
-                victim = this->getClosestMember(enemyTeam);
-            }
+        }
+        if (member->isAlive())
+        {
+            member->attack(victim);
         }
     }
 }

@@ -10,14 +10,14 @@ class Character
     Point location;
     int hitpoints;
     string name;
-    int isCowboy;
+    bool isCowboy;
     bool Team;
 
 public:
     bool getRole();
     bool getTeam();
     bool setTeam();
-    Character(string, const Point &, int hp, int isCowboy);
+    Character(string, const Point &, int hp, bool isCowboy);
     void setLocation(Point);
     bool isAlive();
     int getHitpoints();

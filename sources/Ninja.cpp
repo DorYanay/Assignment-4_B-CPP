@@ -2,7 +2,7 @@
 #include "Character.hpp"
 
 Ninja::Ninja(string name, const Point &location, int hitpoints, int speed)
-    : Character(name, location, hitpoints, 0), speed(speed) {}
+    : Character(name, location, hitpoints, false), speed(speed) {}
 
 void Ninja::move(const Character *enemy)
 {

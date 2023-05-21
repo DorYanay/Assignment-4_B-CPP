@@ -2,7 +2,7 @@
 #include "Ninja.hpp"
 #include "Cowboy.hpp"
 
-Character::Character(string name, const Point &location, int hitpoints, int isCowboy)
+Character::Character(string name, const Point &location, int hitpoints, bool isCowboy)
     : name(name), location(location), hitpoints(hitpoints), isCowboy(isCowboy), Team(false) {}
 bool Character::isAlive()
 {

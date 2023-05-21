@@ -22,6 +22,7 @@ class Team
 
 public:
     Character *getFarthestMember(Character *member, Team *team);
+    Character *getClosestMemberSmart(Character *member, Team *team);
     Character *getLeader();
     vector<Character *> *getTeam();
     Team(Character *leader);

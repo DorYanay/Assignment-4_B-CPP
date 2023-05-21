@@ -1,7 +1,7 @@
 #include "Cowboy.hpp"
 #include "Character.hpp"
 
-Cowboy::Cowboy(string name, const Point &location) : Character(name, location, 100, 1), bullets(6) {}
+Cowboy::Cowboy(string name, const Point &location) : Character(name, location, 100, true), bullets(6) {}
 void Cowboy::shoot(Character *enemy)
 {
     if (!this->isAlive())
