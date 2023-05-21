@@ -8,7 +8,7 @@ void SmartTeam::attack(Team *enemyTeam)
 {
     if (!enemyTeam)
     {
-        throw runtime_error("WHERE IS THE ENEMY TEAM?!\n");
+        throw invalid_argument("WHERE IS THE ENEMY TEAM?!\n");
     }
     if (!enemyTeam->stillAlive())
     {
@@ -17,33 +17,33 @@ void SmartTeam::attack(Team *enemyTeam)
     Character *leader = this->getLeader();
     if (!leader->isAlive())
     {
-        leader = this->getClosestMember(leader);
+        leader = this->getClosestMember(this);
     }
     while (this->stillAlive() && enemyTeam->stillAlive())
     {
-        Character *victim = enemyTeam->getClosestMember(leader);
+        Character *victim = this->getClosestMember(enemyTeam);
         for (Character *member : *this->getTeam())
         {
             if (member->getRole())
             {
                 if (member->isAlive())
                 {
-                    member->attack(enemyTeam->getFarthestMember(member));
+                    member->attack(this->getFarthestMember(member, enemyTeam));
                 }
                 if (!victim->isAlive())
                 {
-                    victim = enemyTeam->getClosestMember(leader);
+                    victim = this->getClosestMember(enemyTeam);
                 }
             }
             if (!member->getRole())
             {
                 if (member->isAlive())
                 {
-                    member->attack(enemyTeam->getClosestMember(member));
+                    member->attack(this->getClosestMember(enemyTeam));
                 }
                 if (!victim->isAlive())
                 {
-                    victim = enemyTeam->getClosestMember(leader);
+                    victim = this->getClosestMember(enemyTeam);
                 }
             }
         }

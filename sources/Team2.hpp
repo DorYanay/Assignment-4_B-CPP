@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 #include "Team.hpp"
-
+using namespace std;
 class Team2 : public Team
 {
 public:

@@ -6,6 +6,7 @@
 #include "Cowboy.hpp"
 #include "Team.hpp"
 #include "Team2.hpp"
+using namespace std;
 class SmartTeam : public Team
 {
 
@@ -14,5 +15,4 @@ public:
     SmartTeam(const SmartTeam &);
     void attack(Team *);
     void print();
-    Character *getFarthestMember(Character *member);
 };

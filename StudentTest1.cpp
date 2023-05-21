@@ -362,6 +362,7 @@ TEST_SUITE("Battle related methods")
             old.slash(&ninja);
             young.slash(&ninja);
         }
+
         CHECK(ninja.isAlive());
         CHECK(ninja2.isAlive());
     }

@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 #include "Character.hpp"
-
+using namespace std;
 constexpr int YoungHP = 100;
 constexpr int YoungSpeed = 14;
 constexpr int TrainedHP = 120;
@@ -19,5 +19,5 @@ public:
     void move(const Character *);
     void slash(Character *);
     string print() override;
-    void attack(Character *enemy) override { slash(enemy); }
+    void attack(Character *enemy) override;
 };

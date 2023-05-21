@@ -9,7 +9,7 @@
 #include "YoungNinja.hpp"
 #include "Character.hpp"
 #include <climits>
-
+using namespace std;
 const int MAX_CAPACITY = 10;
 namespace ariel
 {
@@ -21,7 +21,7 @@ class Team
     int current;
 
 public:
-    Character *getFarthestMember(Character *teammate);
+    Character *getFarthestMember(Character *member, Team *team);
     Character *getLeader();
     vector<Character *> *getTeam();
     Team(Character *leader);
@@ -33,6 +33,6 @@ public:
     virtual void attack(Team *);
     int stillAlive();
     void print();
-    Character *getClosestMember(Character *leader);
+    Character *getClosestMember(Team *team);
     ~Team();
 };

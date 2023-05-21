@@ -37,30 +37,32 @@ Team &Team::operator=(Team &&other) noexcept
 }
 void Team::add(Character *member)
 {
+
+    if (team.size() == 10 || member->getTeam())
+    {
+        throw runtime_error("there are maximum 10 members that are not already in other teams");
+    }
+
     if (!member->isAlive())
     {
         throw runtime_error("DEAD MAN - ARE YOU A NECROMANCER?\n");
     }
-    if (member->getTeam() || team.size() > MAX_CAPACITY)
-    {
-        throw runtime_error("either a member is a spy or you are trying to build an army.\n");
-    }
     team.push_back(member);
     member->setTeam();
 }
-Character *Team::getClosestMember(Character *leader)
+
+Character *Team::getClosestMember(Team *other)
 {
     Character *closestCharacter = nullptr;
-    float minDistance = std::numeric_limits<float>::max();
+    double minDistance = __DBL_MAX__;
 
-    for (Character *member : this->team)
+    for (Character *member : other->team)
     {
-        if (member != leader && member->isAlive())
+        if (member->isAlive())
         {
-            float currentDistance = leader->distance(member);
-            if (currentDistance < minDistance)
+            if (member->distance(this->leader) < minDistance)
             {
-                minDistance = currentDistance;
+                minDistance = member->distance(this->leader);
                 closestCharacter = member;
             }
         }
@@ -68,19 +70,18 @@ Character *Team::getClosestMember(Character *leader)
 
     return closestCharacter;
 }
-Character *Team::getFarthestMember(Character *teammate)
+Character *Team::getFarthestMember(Character *teammate, Team *other)
 {
     Character *farthestCharacter = nullptr;
-    float maxDistance = -std::numeric_limits<float>::max(); // initially set to the smallest possible value
+    double maxDistance = __DBL_MIN__;
 
-    for (Character *member : *this->getTeam())
+    for (Character *member : other->team)
     {
         if (member->isAlive())
         {
-            float currentDistance = teammate->distance(member);
-            if (currentDistance > maxDistance)
+            if (member->distance(teammate) > maxDistance)
             {
-                maxDistance = currentDistance;
+                maxDistance = member->distance(teammate);
                 farthestCharacter = member;
             }
         }
@@ -94,28 +95,28 @@ void Team::attack(Team *enemyTeam)
     {
         throw invalid_argument("WHERE IS THE ENEMY TEAM?!\n");
     }
-    if (!enemyTeam->stillAlive())
+    if (enemyTeam->stillAlive() == 0)
     {
         return;
     }
     if (!this->leader->isAlive())
     {
-        this->leader = getClosestMember(leader);
+        this->leader = this->getClosestMember(this);
     }
     while (this->stillAlive() && enemyTeam->stillAlive())
     {
-        Character *victim = enemyTeam->getClosestMember(this->leader);
+        Character *victim = this->getClosestMember(enemyTeam);
         for (Character *member : team)
         {
             if (member->getRole())
             {
                 if (member->isAlive())
                 {
-                    member->attack(enemyTeam->getClosestMember(this->leader));
+                    member->attack(this->getClosestMember(enemyTeam));
                 }
                 if (!victim->isAlive())
                 {
-                    victim = enemyTeam->getClosestMember(this->leader);
+                    victim = this->getClosestMember(enemyTeam);
                 }
             }
         }
@@ -125,11 +126,11 @@ void Team::attack(Team *enemyTeam)
             {
                 if (member->isAlive())
                 {
-                    member->attack(enemyTeam->getClosestMember(this->leader));
+                    member->attack(this->getClosestMember(enemyTeam));
                 }
                 if (!victim->isAlive())
                 {
-                    victim = enemyTeam->getClosestMember(this->leader);
+                    victim = this->getClosestMember(enemyTeam);
                 }
             }
         }

@@ -28,7 +28,14 @@ void Character::hit(int dmg)
 {
     if (dmg < 0)
         throw invalid_argument("MISSED BROTHA\n");
-    this->hitpoints = max(0, (this->hitpoints) - dmg);
+    if (hitpoints - dmg < 0)
+    {
+        this->hitpoints = 0;
+    }
+    else
+    {
+        this->hitpoints = hitpoints - dmg;
+    }
 };
 string Character::getName() { return this->name; }
 Point Character::getLocation() const { return this->location; }

@@ -20,6 +20,7 @@ Point Point::moveTowards(Point src, Point dst, double distance)
     {
         throw invalid_argument("distance cannot be zero\n");
     }
+
     double totalDistance = src.distance(dst);
 
     if (totalDistance <= distance)

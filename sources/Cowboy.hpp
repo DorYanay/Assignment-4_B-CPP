@@ -1,7 +1,9 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <stdexcept>
 #include "Character.hpp"
+using namespace std;
 
 class Cowboy : public Character
 {
