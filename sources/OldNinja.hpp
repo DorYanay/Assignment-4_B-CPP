@@ -1,6 +1,6 @@
 #pragma once
 #include "Ninja.hpp"
-using namespace std;
+
 class OldNinja : public Ninja
 {
 

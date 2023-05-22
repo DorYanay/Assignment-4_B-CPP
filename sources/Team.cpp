@@ -122,6 +122,10 @@ void Team::attack(Team *enemyTeam)
             }
             member->attack(victim);
         }
+        else
+        {
+            continue;
+        }
     }
     for (Character *member : team)
     {
@@ -134,6 +138,10 @@ void Team::attack(Team *enemyTeam)
                     return;
             }
             member->attack(victim);
+        }
+        else
+        {
+            continue;
         }
     }
 }
@@ -165,6 +173,7 @@ void Team::print()
             cout << member->print() << endl;
         }
     }
+    cout << endl;
 }
 
 Character *Team::getLeader()
