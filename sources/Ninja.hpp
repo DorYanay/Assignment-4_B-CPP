@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <stdexcept>
 #include "Character.hpp"
 using namespace std;
 constexpr int YoungHP = 100;
@@ -16,6 +17,7 @@ class Ninja : public Character
 
 public:
     Ninja(string name, const Point &location, int hitpoints, int speed);
+    string getRole() override { return "ninja"; }
     void move(const Character *);
     void slash(Character *);
     string print() override;

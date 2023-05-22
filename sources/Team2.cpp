@@ -2,9 +2,21 @@
 #include "Team2.hpp"
 
 Team2::Team2(Character *leader) : Team(leader) {}
-Team2::Team2(const Team2 &other) : Team(other) {}
 void Team2::attack(Team *enemyTeam)
 {
+    if (this->stillAlive() == 0)
+    {
+        throw runtime_error("You cannot rise the dead yet.\n");
+    }
+    if (!this->getLeader()->isAlive())
+    {
+        this->setLeader(getClosestMember(this));
+    }
+
+    if (this == enemyTeam)
+    {
+        throw runtime_error("im no Masochist. I WON`T HARM MYSELF!\n");
+    }
     if (!enemyTeam)
     {
         throw invalid_argument("WHERE IS THE ENEMY TEAM?!\n");
@@ -13,27 +25,19 @@ void Team2::attack(Team *enemyTeam)
     {
         throw runtime_error("You are defiling corpses\n");
     }
-    Character *leader = this->getLeader();
-    if (!leader->isAlive())
-    {
-        leader = this->getClosestMember(this);
-    }
 
-    Character *victim = this->getClosestMember(enemyTeam);
+    Character *victim = getClosestMember(enemyTeam);
     for (Character *member : *this->getTeam())
     {
         if (!victim->isAlive())
         {
-            victim = this->getClosestMember(enemyTeam);
+            victim = getClosestMember(enemyTeam);
             if (!victim)
             {
                 return;
             }
         }
-        if (member->isAlive())
-        {
-            member->attack(victim);
-        }
+        member->attack(victim);
     }
 }
 void Team2::print()

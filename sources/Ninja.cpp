@@ -2,18 +2,15 @@
 #include "Character.hpp"
 
 Ninja::Ninja(string name, const Point &location, int hitpoints, int speed)
-    : Character(name, location, hitpoints, false), speed(speed) {}
+    : Character(name, location, hitpoints), speed(speed) {}
 
 void Ninja::move(const Character *enemy)
 {
     if (!this->isAlive())
     {
-        throw runtime_error("the dead is not a zombie. he is dead.\n");
+        throw runtime_error("lets move and step on some dead bodies.\n");
     }
-    if (this == enemy)
-    {
-        return;
-    }
+
     this->setLocation(Point::moveTowards(this->getLocation(), enemy->getLocation(), this->speed));
 }
 void Ninja::slash(Character *enemy)
@@ -38,20 +35,18 @@ void Ninja::slash(Character *enemy)
 }
 void Ninja::attack(Character *enemy)
 {
-    if (!enemy->isAlive())
-    {
-        throw runtime_error("ATTACK A DEADMAN? you must be sick\n");
-    }
     if (!this->isAlive())
     {
-        throw runtime_error("DEAD MAN cant attack.\n");
+        return;
     }
-
+    if (!enemy->isAlive())
+    {
+        return;
+    }
     if (this->distance(enemy) < 1)
     {
         this->slash(enemy);
     }
-
     else
     {
         this->move(enemy);
@@ -63,5 +58,5 @@ string Ninja::print()
     {
         return "name: (N)" + this->getName() + ", hit points: " + to_string(this->getHitpoints()) + ", location: " + this->getLocation().print();
     }
-    return "name: (N)" + this->getName() + ", location: " + this->getLocation().print();
+    return "name: (N)(" + this->getName() + "), location: " + this->getLocation().print();
 }

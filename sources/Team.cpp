@@ -4,10 +4,6 @@
 using namespace std;
 Team::Team(Character *leader) : leader(leader)
 {
-    if (!leader->isAlive())
-    {
-        throw runtime_error("HOW A DEAD MAN CAN LEAD?\n");
-    }
     if (leader->getTeam())
     {
         throw runtime_error("Going behind the enemy rank? not on my watch.\n");
@@ -15,37 +11,19 @@ Team::Team(Character *leader) : leader(leader)
     team.push_back(leader);
     leader->setTeam();
 }
-Team::Team(const Team &other) : leader(other.leader) {}
-Team::Team(Team &&other) noexcept
+Team::~Team()
 {
-    leader = other.leader;
-    team = other.team;
-}
-
-Team &Team::operator=(const Team &other)
-{
-    leader = other.leader;
-    team = other.team;
-    return *this;
-}
-
-Team &Team::operator=(Team &&other) noexcept
-{
-    leader = other.leader;
-    team = other.team;
-    return *this;
+    for (Character *member : team)
+    {
+        delete member;
+    }
 }
 void Team::add(Character *member)
 {
 
     if (team.size() == 10 || member->getTeam())
     {
-        throw runtime_error("there are maximum 10 members that are not already in other teams");
-    }
-
-    if (!member->isAlive())
-    {
-        throw runtime_error("DEAD MAN - ARE YOU A NECROMANCER?\n");
+        throw runtime_error("hmm hmm cough cough GOTCHA!\n");
     }
     team.push_back(member);
     member->setTeam();
@@ -60,9 +38,9 @@ Character *Team::getClosestMember(Team *other)
     {
         if (member->isAlive())
         {
-            if (member->distance(this->leader) < minDistance)
+            if (this->leader->distance(member) < minDistance)
             {
-                minDistance = member->distance(this->leader);
+                minDistance = this->leader->distance(member);
                 closestCharacter = member;
             }
         }
@@ -79,9 +57,9 @@ Character *Team::getClosestMemberSmart(Character *teammate, Team *other)
     {
         if (member->isAlive())
         {
-            if (member->distance(teammate) < minDistance)
+            if (teammate->distance(member) < minDistance)
             {
-                minDistance = member->distance(teammate);
+                minDistance = teammate->distance(member);
                 closestCharacter = member;
             }
         }
@@ -98,9 +76,9 @@ Character *Team::getFarthestMember(Character *teammate, Team *other)
     {
         if (member->isAlive())
         {
-            if (member->distance(teammate) > maxDistance)
+            if (teammate->distance(member) > maxDistance)
             {
-                maxDistance = member->distance(teammate);
+                maxDistance = teammate->distance(member);
                 farthestCharacter = member;
             }
         }
@@ -110,63 +88,52 @@ Character *Team::getFarthestMember(Character *teammate, Team *other)
 }
 void Team::attack(Team *enemyTeam)
 {
+    if (this->stillAlive() == 0)
+    {
+        throw runtime_error("You cannot rise the dead yet.\n");
+    }
+    if (this->leader->isAlive() == 0)
+    {
+        this->leader = getClosestMember(this);
+    }
+
+    if (this == enemyTeam)
+    {
+        throw runtime_error("im no Masochist. I WON`T HARM MYSELF!\n");
+    }
     if (!enemyTeam)
     {
         throw invalid_argument("WHERE IS THE ENEMY TEAM?!\n");
     }
-    if (!enemyTeam->stillAlive())
+    if (enemyTeam->stillAlive() == 0)
     {
         throw runtime_error("You are defiling corpses\n");
     }
-    if (!this->leader->isAlive())
-    {
-        this->leader = this->getClosestMember(this);
-    }
-
-    Character *victim = this->getClosestMember(enemyTeam);
+    Character *victim = getClosestMember(enemyTeam);
     for (Character *member : team)
     {
-        if (member->getRole())
+        if (member->getRole() == "cowboy")
         {
             if (!victim->isAlive())
             {
-                victim = this->getClosestMember(enemyTeam);
-                if (!victim)
-                {
+                victim = getClosestMember(enemyTeam);
+                if (victim == nullptr)
                     return;
-                }
             }
-            if (member->isAlive())
-            {
-                member->attack(victim);
-            }
-        }
-        else
-        {
-            continue;
+            member->attack(victim);
         }
     }
     for (Character *member : team)
     {
-        if (!member->getRole())
+        if (member->getRole() == "ninja")
         {
             if (!victim->isAlive())
             {
-                victim = this->getClosestMember(enemyTeam);
-                if (!victim)
-                {
+                victim = getClosestMember(enemyTeam);
+                if (victim == nullptr)
                     return;
-                }
             }
-
-            if (member->isAlive())
-            {
-                member->attack(victim);
-            }
-        }
-        else
-        {
-            continue;
+            member->attack(victim);
         }
     }
 }
@@ -186,31 +153,29 @@ void Team::print()
 {
     for (Character *member : team)
     {
-        if (member->getRole())
+        if (member->getRole() == "cowboy")
         {
             cout << member->print() << endl;
         }
     }
     for (Character *member : team)
     {
-        if (!member->getRole())
+        if (member->getRole() == "ninja")
         {
             cout << member->print() << endl;
         }
     }
 }
-Team::~Team()
-{
-    for (Character *member : team)
-    {
-        team.pop_back();
-    }
-}
+
 Character *Team::getLeader()
 {
     return this->leader;
 }
+void Team::setLeader(Character *newLeader)
+{
+    this->leader = newLeader;
+}
 vector<Character *> *Team::getTeam()
 {
-    return &this->team;
+    return &team;
 }

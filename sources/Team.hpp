@@ -2,6 +2,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <stdexcept>
 #include "Ninja.hpp"
 #include "Cowboy.hpp"
 #include "OldNinja.hpp"
@@ -9,6 +10,7 @@
 #include "YoungNinja.hpp"
 #include "Character.hpp"
 #include <climits>
+
 using namespace std;
 const int MAX_CAPACITY = 10;
 namespace ariel
@@ -18,22 +20,22 @@ class Team
 {
     Character *leader;
     vector<Character *> team;
-    int current;
 
 public:
     Character *getFarthestMember(Character *member, Team *team);
     Character *getClosestMemberSmart(Character *member, Team *team);
     Character *getLeader();
+    void setLeader(Character *newleader);
     vector<Character *> *getTeam();
     Team(Character *leader);
-    Team(const Team &);
-    Team &operator=(const Team &);
-    Team(Team &&) noexcept;
-    Team &operator=(Team &&) noexcept;
-    virtual void add(Character *);
-    virtual void attack(Team *);
+    Team(Team &&) = default;
+    Team(const Team &) = default;
+    Team &operator=(Team &&) = default;
+    Team &operator=(const Team &) = default;
+    void add(Character *);
+    void attack(Team *);
     int stillAlive();
     void print();
     Character *getClosestMember(Team *team);
-    ~Team();
+    virtual ~Team();
 };

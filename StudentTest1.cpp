@@ -532,9 +532,10 @@ TEST_SUITE("Battle simulations")
         multi_attack(4, team, team2);
         CHECK_FALSE(old_ninja->isAlive()); // Old ninja should be dead
         CHECK(!young_ninja2->isAlive());
-        multi_attack(2, team, team2);
 
-        CHECK_NOTHROW(team.attack(&team2));                       // The entire enemy team will be dead before every cowboy shoots, the attack should stop and not throw an exception
+        multi_attack(2, team, team2);
+        CHECK_NOTHROW(team.attack(
+            &team2));                                             // The entire enemy team will be dead before every cowboy shoots, the attack should stop and not throw an exception
         CHECK_FALSE(young_ninja2->isAlive());                     // Young ninja should be dead
         CHECK_THROWS_AS(team.attack(&team2), std::runtime_error); // Attacking a dead team should throw an exception
     }

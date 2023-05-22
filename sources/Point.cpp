@@ -4,12 +4,13 @@ using namespace std;
 Point::Point(double AxisX, double AxisY) : AxisX(AxisX), AxisY(AxisY) {}
 double Point::distance(const Point &other)
 {
-    return sqrt(pow((other.AxisX - this->AxisX), 2) + pow((other.AxisY - this->AxisY), 2));
+    return sqrt(pow(AxisX - other.AxisX, 2) + pow(AxisY - other.AxisY, 2));
 }
 string Point::print()
 {
     return "(" + to_string(this->AxisX) + "," + to_string(this->AxisY) + ")";
 }
+
 Point Point::moveTowards(Point src, Point dst, double distance)
 {
     if (distance == 0)

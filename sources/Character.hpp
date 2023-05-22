@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <cmath>
+#include <stdexcept>
 #include "Point.hpp"
 using namespace std;
 
@@ -10,14 +11,14 @@ class Character
     Point location;
     int hitpoints;
     string name;
-    bool isCowboy;
+    string Role;
     bool Team;
 
 public:
-    bool getRole();
+    virtual string getRole() = 0;
     bool getTeam();
     bool setTeam();
-    Character(string, const Point &, int hp, bool isCowboy);
+    Character(string, const Point &, int hitpoints);
     void setLocation(Point);
     bool isAlive();
     int getHitpoints();
@@ -27,4 +28,9 @@ public:
     string getName();
     Point getLocation() const;
     virtual string print() = 0;
+    virtual ~Character() = default;
+    Character(const Character &) = default;
+    Character &operator=(const Character &) = default;
+    Character(Character &&) = default;
+    Character &operator=(Character &&) = default;
 };

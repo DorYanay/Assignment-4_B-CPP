@@ -11,9 +11,10 @@ class Cowboy : public Character
 
 public:
     Cowboy(string name, const Point &location);
+    string getRole() override { return "cowboy"; }
     void shoot(Character *);
     bool hasboolets();
     void reload();
     string print() override;
-    void attack(Character *enemy) override { shoot(enemy); }
+    void attack(Character *enemy) override;
 };
